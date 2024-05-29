@@ -1,0 +1,19 @@
+[package]
+name = "rust-tgbot"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+teloxide = { version = "0.12", features = ["macros", "sqlite-storage"] }
+log = "0.4"
+pretty_env_logger = "0.4"
+tokio = { version =  "1.8", features = ["rt-multi-thread", "macros"] }
+serde = "1.0.201"
+rand = "0.8.5"
+conll = "0.2.0"
+rs-conllu = "0.1.0"
+chatgpt_rs = "1.2.3"
+dotenv = "0.15.0"
+dotenv_codegen = "0.15.0"
