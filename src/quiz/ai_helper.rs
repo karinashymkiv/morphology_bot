@@ -2,6 +2,8 @@ use crate::quiz::Question;
 use chatgpt::prelude::*;
 use chatgpt::types::CompletionResponse;
 
+use super::Answer;
+
 pub struct QuizHelper {
     personality: Personality,
     chat_gpt: ChatGPT,
@@ -60,13 +62,14 @@ impl QuizHelper {
     pub async fn generate_reply_to_wrong_parts_answer(
         &self,
         question: Question,
+        wrong_answer: String,
     ) -> Result<String> {
         println!(
             "Generating reply to wrong answer for question: {:?}",
             question.text
         );
-        let wrong_answer = question.answers.iter().find(|a| !a.is_correct)
-        .ok_or(chatgpt::err::Error::BackendError { message: "No wrong answer found".to_string(), error_type: "QuizError".to_string() })?;
+        // let wrong_answer = question.answers.iter().find(|a| !a.is_correct)
+        // .ok_or(chatgpt::err::Error::BackendError { message: "No wrong answer found".to_string(), error_type: "QuizError".to_string() })?;
 
         let correct_answer = question.answers.iter().find(|a| a.is_correct)
         .ok_or(chatgpt::err::Error::BackendError { message: "No correct answer found".to_string(), error_type: "QuizError".to_string() })?;
@@ -78,7 +81,7 @@ impl QuizHelper {
         Учень відповів {}, а правильна відповідь -- {}.
         Згенеруй відповідь, яка пояснює в чому була помилка, на яке питання відповідає правильна частина мови.
         До того ж напиши це речення так, наче ти -- {}. Ліміт 1-2 середніх абзаців.",
-         question.text, wrong_answer.text, correct_answer.text, self.personality.get_personality());
+         question.text, wrong_answer, correct_answer.text, self.personality.get_personality());
 
         let response: CompletionResponse = self.chat_gpt.send_message(&prompt).await?;
         let content = response.message().clone().content;
